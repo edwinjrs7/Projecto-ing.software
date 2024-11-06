@@ -1,0 +1,123 @@
+.empresa-list {
+    background: #f8f8f8;
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.empresa-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.empresa-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empresa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.empresa-card .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.empresa-card .logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.empresa-card h3 {
+    font-size: 18px;
+    color: #22c55e;
+    margin-bottom: 5px;
+}
+
+.empresa-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.empresa-card .description {
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.empresa-card .location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.empresa-card .location i {
+    color: #22c55e;
+}
+
+.empresa-card .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.empresa-card .button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.empresa-card .button-outline {
+    border: 1px solid #22c55e;
+    color: #22c55e;
+    background-color: transparent;
+}
+
+.empresa-card .button-outline:hover {
+    background-color: #e6f7ef;
+}
+
+.empresa-card .button-filled {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+}
+
+.empresa-card .button-filled:hover {
+    background-color: #1ca350;
+}
+
+.empresa-card .rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.empresa-card .rating .stars {
+    display: flex;
+    gap: 2px;
+}
+
+.empresa-card .rating .stars i {
+    color: #fbbf24;
+}
+
+.empresa-card .rating .score {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}

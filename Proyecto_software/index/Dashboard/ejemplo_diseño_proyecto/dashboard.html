@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="ejemplo.css">
+    
+    <title>Green Energy Solutions - Dashboard</title>
+</head>
+
+<body>
+    <aside id="sidebar">
+        <ul class="side-menu top">
+            <li>
+
+                <a href="" class="brand">
+                    <span class="icon">
+                        <img src="logo.png" alt="" class="logo" width="90" height="90">
+                    </span>
+
+                    <span class="title">Bienvenido</span>
+
+
+                </a>
+            </li>
+
+
+            <li class="active">
+                <a href="{% url 'Dashboard' %}">
+                    <span class="icon">
+                        <i class='bx bxs-dashboard'></i>
+                    </span>
+                    <span class="text">Registrar Empresas</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="">
+                    <span class="icon">
+                        <i class='bx bx-search'></i>
+                    </span>
+                    <span class="text">Buscador</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="">
+                    <span class="icon">
+                        <i class='bx bxs-doughnut-chart'></i>
+                    </span>
+                    <span class="text">Analytics</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="">
+                    <span class="icon">
+                        <i class='bx bxs-cog'></i>
+                    </span>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li class="">
+                <a href="">
+                    <span class="icon">
+                        <i class='bx bxs-file-plus'></i>
+                    </span>
+                    <span class="text">Ingresar Consumos</span>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <span class="icon">
+                        <i class='bx bxs-home'></i>
+                    </span>
+                    <span class="text">Pagina de Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'cerrar sesión' %}" class="logout">
+                    <span class="icon">
+                        <i class='bx bxs-log-out'></i>
+                    </span>
+                    <span class="text">cerrar Sesión</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+    <section id="content">
+        <nav>
+            <div class="toggle"><i class="bx bx-menu"></i></div>
+        </nav>
+        <main class="main">
+            <div class="head-tittle">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                </div>
+            </div>
+
+            <div class="card-register">
+                <div class="card-header">
+                    <h2 class="card-title">Registrar Empresa</h2>
+                    <p class="card-description">Ingresa el ultimo valor de consumo registrado en tu factura</p>
+                </div>
+                <div class="card-content">
+                    <form action="" method="post">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="consumo">Consumo:</label>
+                                <input type="number" name="consumo" id="consumo" placeholder="consumo">
+                            </div>
+                            <div class="form-group">
+                                <label for="valorpagado">Valor a pagar:</label>
+                                <input type="number" name="valorpagado" placeholder="Valor de tu factura">
+                            </div>
+                            <div class="form-group">
+                                <label for="periodo">Periodo:</label>
+                                <input type="text" name="periodo" id="periodo" placeholder="Mes del consumo">
+                                <span>Por favor ingresar el periodo en formato "YYYY-MM"</span>
+                            </div>
+                            <div class="form-group"><label for=""></label></div>
+                            <div class="form-group"><label for=""></label></div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Ingresar Informe</button>
+                            </div>
+                        </div>
+                </div>
+                </form>
+
+            </div>
+        
+        </main>
+    </section>
+    <script src="scripts copy.js"></script>
+</body>
+
+</html>
