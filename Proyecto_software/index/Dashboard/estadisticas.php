@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Green Energy Solutions - Estadisticas</title>
     <link rel="stylesheet" href="style.css">
-    <title>Green Energy Solutions - Dashboard</title>
-    <?php 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <?php
+        
         require_once '../bdd/conexion.php';
         include '../metodos/ManejoBDD.php';
         include '../metodos/factory/CalcularConsumos.php';
@@ -20,25 +20,21 @@
 
         $nombre_usuario =  htmlspecialchars($_SESSION['firstname']);
         $userId = $_SESSION['id'];
-        
 
-        //instancia de otras clases.
         $factory = new CalcularConsumosFactory();
         $operacionesSQL = new operacionesSQL($conn);
-        $analizador = new AnalizadorConsumo($factory,$operacionesSQL);
-        $empresas = new Empresas($conn);
+        $analizador = new AnalizadorConsumo($factory,$operacionesSQL); 
 
         $resultados = $operacionesSQL->obtenerConsumosMensuales($userId,-6);
+        $totales = $operacionesSQL->obtenerConsumoAnual($userId);
         $analisis = $analizador->analizarConsumo($userId);
         $promedios = $analizador->CalcularPromedio($userId);
-        $selecciones = $empresas->ObtenerSelecciones($userId);
 
         $labels = [];
         $consumos = [];
         $costos = [];
-        $diferencia=[];
-        $porcentual=[];
-        $promedio=[];
+        $totalconsumido= [];
+        $totalpagado = [];
 
         if (!$resultados['error'] && !empty($resultados['resultados'])) {
             foreach ($resultados['resultados'] as $resultado) {
@@ -50,6 +46,21 @@
             // Asigna valores predeterminados
             $labels = $consumos = $costos = [];
         }
+
+        if(!$totales['error'] && !empty($totales['resultados'])){
+            $totalconsumido = isset($totales['resultados']['total_consumido']) ? $totales['resultados']['total_consumido'] :0;
+            $totalpagado = isset($totales['resultados']['total_pagado']) ? $totales['resultados']['total_pagado'] : 0;
+        }else{
+            // Asigna valores predeterminados
+            $totalconsumido = 0;
+            $totalpagado = 0;
+        }
+       
+        $diferencia=[];
+        $porcentual=[];
+        $promedio=[];
+
+        
         
         if (isset($analisis['error']) && !$analisis['error'] && isset($analisis['resultados'])) {
             foreach ($analisis['resultados'] as $porcentaje) {
@@ -73,9 +84,8 @@
         $resumen = $resultados['resumen'] ?? null;
     ?>
 </head>
-
 <body>
-    <aside id="sidebar">
+<aside id="sidebar">
         <ul class="side-menu top">
             <li>
 
@@ -94,7 +104,7 @@
             </li>
 
 
-            <li class="active">
+            <li class="">
                 <a href="Dashboard.php">
                     <span class="icon">
                         <i class='bx bxs-dashboard'></i>
@@ -110,7 +120,7 @@
                     <span class="text">Buscador</span>
                 </a>
             </li>
-            <li class="">
+            <li class="active">
                 <a href="estadisticas.php">
                     <span class="icon">
                         <i class='bx bxs-doughnut-chart'></i>
@@ -143,7 +153,6 @@
                 </a>
             </li>
 
-
         </ul>
     </aside>
     <section id="content">
@@ -153,10 +162,18 @@
         <main class="main">
             <div class="head-title">
                 <div class="left">
-                    <h1>Dashboard</h1>
+                    <h1>Estadisticas</h1>
                 </div>
             </div>
             <div class="card-grid">
+                <div class="card">
+                    <h3 class="card-title"><i class='bx bx-dollar'></i>Pago acumulado:</h3>
+                    <p class="card-value">$<?php echo number_format($totalpagado);?> pesos</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title"><i class='bx bxs-bolt'></i>Consumo Acumulado:</h3>
+                    <p class="card-value"><?php echo number_format($totalconsumido);?>Kwh</p>
+                </div>
                 <div class="card">
                     <h3 class="card-title"><i class='bx bxs-bolt'></i>Ultimo Consumo:</h3>
                     <?php if (!empty($consumos)): ?>
@@ -186,26 +203,21 @@
                     echo '<p class="card-description">0%</p>';
                 }
 
-             ?>
+                ?>
                 </div>
-                <div class="card">
-                    <h3 class="card-title"><i class='bx bxs-pie-chart-alt-2' ></i>Consumo Promedio:</h3>
-                    <p class="card-value"><?php echo number_format($promedioConsumo,1) ?>Kwh</p>
-                </div>
-                <div class="card">
-                    <h3 class="card-title"><i class='bx bx-dollar'></i>Tu Ultimo Pago:</h3>
-                    <?php if(!empty($consumos)):?>
-                        <p class="card-value">$<?php echo htmlspecialchars($resultado['costo']); ?> pesos.</p>
-                    <?php else: ?>
-                        <p class="card-value">$0 pesos.</p>
-                    <?php endif ?>    
-                </div>
-                <div class="card">
-                    <h3 class="card-title"><i class='bx bxs-briefcase-alt-2'></i>Proveedores:</h3>
-                    <p class="card-value">2</p>
-                </div>
+                
             </div>
-
+            <div class="card-grid">
+                <div class="chart-placeholder">
+                    <h4>Relacion costo consumo</h4>
+                    <div class="chart-area"></div>
+                </div>
+                <div class="chart-placeholder">
+                    <h4>Pagos Mensuales</h4>
+                    <div class="chart-area" id="chart-area-2"></div>
+                </div>
+               
+            </div>
             <div class="chart-placeholder">
                 <h2>Consumo Energetico Mensual </h2>
                 <?php if(!empty($porcentual)):?>
@@ -217,54 +229,117 @@
                     <p class = "card-description"></p>
                 <?php endif ?>
                 <?php if (!empty($consumos)):?>
-                        <div class="chart-area"></div>
+                        <div class="chart-area" id="chart-area-3"></div>
                 <?php else: ?>
                         <p>No Hay datos suficientes para mostrar en la grafica.</p>
                 <?php endif ?>
             </div>
-            <div class="companies-table">
-                <h2>Tus Empresas seleccionandas</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Calificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(!$selecciones['error'] && !empty($selecciones)){
-                            foreach($selecciones['resultados'] as $seleccion){
-                                ?>
-                                <tr>
-                                    <td><img src="<?php echo htmlspecialchars($seleccion['logo']);?>" alt="Logo de empresa" width="50" height="50"></td>
-                                    <td><?php echo htmlspecialchars($seleccion['nombre'])?></td>
-                                    <td><?php echo htmlspecialchars($seleccion['tipo'])?></td>
-                                    <td></td>
-                                </tr>
-                                <?php
-                            }
-                        }else{
-                            echo '<p>No has seleccionando ninguna empresa aun</p>';
-                        } 
-                        ?>
-                        
-                    </tbody>
-                </table>
-            </div>
         </main>
-    </section>
+    </section>  
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        const options = {
+          const options = {
+            series: [
+                {
+                    name: 'Consumo (kWh)',
+                    data: <?php echo json_encode($consumos); ?>,
+                },
+                {
+                    name: 'Costo (USD)',
+                    data: <?php echo json_encode($costos); ?>,
+                }
+            ],
+            chart: {
+                type: 'line',
+                height: 250
+            },
+            xaxis: {
+                categories: <?php echo json_encode($labels); ?>
+            },
+            yaxis: [
+                {
+                    title: {
+                        text: 'Consumo (kWh)'
+                    }
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: 'Costo (COP)'
+                    }
+                }
+            ],
+            colors: ['#00BFFF', '#FF6347'],
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            
+            
+            legend: {
+                position: 'top'
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector('.chart-area'), options);
+        chart.render();
+        
+        
+            const options2={
+            series: [{
+                name: 'Costo (USD)',
+                data: <?php echo json_encode($costos); ?>
+            }],
+            chart: {
+                type: 'bar',
+                height: 250
+            },
+            xaxis: {
+                categories: <?php echo json_encode($labels); ?>,
+                title: {
+                    text: 'Meses'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Costo (COP)'
+                }
+            },
+            
+            colors: ['#22c55e'],
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '50%'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return "$" + val;
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return "$" + val;
+                    }
+                }
+            }
+        };
+
+
+        const chart2 = new ApexCharts(document.querySelector('#chart-area-2'), options2);
+        chart2.render();
+        
+        const options3 = {
             series: [{
                 name: 'Consumo',
                 data: <?php echo json_encode($consumos); ?>
             }],
             chart: {
-                type: 'area',
-                height: 350
+                type: 'line',
+                height: 250
             },
             xaxis: {
                 categories: <?php echo json_encode($labels); ?>
@@ -276,10 +351,10 @@
         }
         };
 
-        const chart = new ApexCharts(document.querySelector('.chart-area'), options);
-        chart.render();
-    </script>
-    <script src="scripts.js"></script>
+        const chart3 = new ApexCharts(document.querySelector('#chart-area-3'), options3);
+        chart3.render();
+        
+    </script>   
+    <script src="scripts.js"></script>   
 </body>
-
 </html>

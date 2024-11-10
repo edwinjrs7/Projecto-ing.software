@@ -60,7 +60,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="">
+                <a href="estadisticas.php">
                     <span class="icon">
                         <i class='bx bxs-doughnut-chart'></i>
                     </span>

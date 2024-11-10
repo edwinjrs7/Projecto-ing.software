@@ -41,8 +41,8 @@
             return['success' => true];
         }
         
-        public function obtenerConsumosMensuales($userId){
-            $sql = "SELECT cm.periodo, c.consumo, cm.costo FROM consumoMensual cm JOIN consumo c ON cm.id_consumo = c.id WHERE c.user_id = ? ORDER BY cm.periodo";
+        public function obtenerConsumosMensuales($userId, $limit=3){
+            $sql = "SELECT c.id, cm.periodo, c.consumo, cm.costo FROM consumoMensual cm JOIN consumo c ON cm.id_consumo = c.id WHERE c.user_id = ? ORDER BY cm.periodo limit ?";
             $stmt = $this->conexion->prepare($sql);
              
             if($stmt === false){
@@ -50,7 +50,7 @@
             }
             
 
-            $stmt->bind_param("i",$userId);
+            $stmt->bind_param("ii",$userId,$limit);
             $stmt->execute();
 
             if(!$stmt->execute()){
@@ -62,6 +62,8 @@
 
             return ['error' => false, 'resultados' => $resultado];
         }
+
+        
 
         public function actualizarConsumoAnual($userId,$año){
             $sql = "SELECT SUM(c.consumo) as total_consumido, SUM(cm.costo) as total_pagado FROM consumo c JOIN consumoMensual cm ON c.id = cm.id_consumo WHERE c.user_id = ?";
@@ -89,6 +91,27 @@
 
             return $stmt2->execute();
         }
+        
+        public function obtenerConsumoAnual($userId,$limit = 1){
+            $sql ='SELECT total_pagado, total_consumido FROM consumoanual ca JOIN consumo c ON ca.id_consumo = c.id WHERE c.user_id = ? ORDER BY total_consumido DESC LIMIT ?';
+            $stmt = $this->conexion->prepare($sql);
+
+            if($stmt === false){
+                return ['error'=> true, 'mensaje'=> $this->conexion->error, 'resultados'=>[]];
+            }
+
+            $stmt->bind_param('ii',$userId,$limit);
+            $stmt->execute();
+
+            if(!$stmt->execute()){
+                return ['error'=> true, 'mensaje'=> $this->conexion->error, 'resultados'=>[]];
+            }
+
+            $result = $stmt->get_result();
+            $resultados = $result->fetch_assoc();
+
+            return ['error'=>false, 'resultados'=>$resultados];
+        }
 
         public function __destruct(){
             if($this->conexion){
@@ -108,7 +131,7 @@
 
         public function AnalizarConsumo($userId){
             $resultados = [];
-            $consumos = $this->db->obtenerConsumosMensuales($userId);
+            $consumos = $this->db->obtenerConsumosMensuales($userId,4);
             if($consumos['error']){
                 return ['error'=> true, 'resultados'=> $resultados];
             }
@@ -147,7 +170,7 @@
             $totalCosto = 0;
             $resultado = [];
 
-            $consumos = $this->db->obtenerConsumosMensuales($userId);
+            $consumos = $this->db->obtenerConsumosMensuales($userId,4);
 
             if($consumos['error']){
                 return ['error'=> true, 'resultados'=> $resultado];

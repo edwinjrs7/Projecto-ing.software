@@ -60,7 +60,7 @@
     }
 
     $consumos = new operacionesSQL($conn);
-    $resultados = $consumos->obtenerConsumosMensuales($userId);
+    $resultados = $consumos->obtenerConsumosMensuales($userId,10);
  ?>
 </head>
 
@@ -92,7 +92,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="">
+                <a href="buscador.php">
                     <span class="icon">
                         <i class='bx bx-search'></i>
                     </span>
@@ -100,7 +100,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="">
+                <a href="estadisticas.php">
                     <span class="icon">
                         <i class='bx bxs-doughnut-chart'></i>
                     </span>
@@ -132,13 +132,14 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'cerrar sesión' %}" class="logout">
+                <a href="../Ingresos_usuarios/logout.php" class="logout">
                     <span class="icon">
                         <i class='bx bxs-log-out'></i>
                     </span>
                     <span class="text">cerrar Sesión</span>
                 </a>
             </li>
+
 
         </ul>
     </aside>
@@ -208,8 +209,11 @@
                                               <td><?php echo $resultado['periodo'] ?></td>
                                               <td>$<?php echo $resultado['costo'] ?></td>
                                               <td>
-                                                <button class="edit-btn"><i class='bx bx-edit-alt'></i></button>
-                                                <button class="delete-btn"><i class='bx bx-trash'></i></button>
+                                                  <form action="eliminar.php">
+                                                    <button class="edit-btn"><i class='bx bx-edit-alt'></i></button>
+                                                    <input type="hidden" name="consumo_id" value="<?php echo $resultado['id']?> ">
+                                                    <button class="delete-btn" type="submit" on-click="return confirm('¿Estas seguro de eliminar este registro ?')"><i class='bx bx-trash'></i></button>
+                                                </form>
                                               </td>
                                           </tr>
                                           <?php
