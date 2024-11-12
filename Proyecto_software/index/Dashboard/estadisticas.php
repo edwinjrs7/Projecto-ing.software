@@ -25,7 +25,7 @@
         $operacionesSQL = new operacionesSQL($conn);
         $analizador = new AnalizadorConsumo($factory,$operacionesSQL); 
 
-        $resultados = $operacionesSQL->obtenerConsumosMensuales($userId,-6);
+        $resultados = $operacionesSQL->obtenerConsumosMensuales($userId);
         $totales = $operacionesSQL->obtenerConsumoAnual($userId);
         $analisis = $analizador->analizarConsumo($userId);
         $promedios = $analizador->CalcularPromedio($userId);

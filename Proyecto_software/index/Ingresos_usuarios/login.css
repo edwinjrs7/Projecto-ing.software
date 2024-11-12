@@ -87,3 +87,47 @@ body{
     color: #4f46e5;
     text-decoration: none;
 }
+.notification-box {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+.notification-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #f44336;
+}
+.notification-message {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+.close-button {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.close-button:hover {
+    background-color: #d32f2f;
+}
+.try-again-link {
+    display: block;
+    margin-top: 10px;
+    color: #1976D2;
+    text-decoration: none;
+}
+.try-again-link:hover {
+    text-decoration: underline;
+}

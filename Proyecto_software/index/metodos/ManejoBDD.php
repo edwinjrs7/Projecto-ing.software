@@ -41,8 +41,8 @@
             return['success' => true];
         }
         
-        public function obtenerConsumosMensuales($userId, $limit=3){
-            $sql = "SELECT c.id, cm.periodo, c.consumo, cm.costo FROM consumoMensual cm JOIN consumo c ON cm.id_consumo = c.id WHERE c.user_id = ? ORDER BY cm.periodo limit ?";
+        public function obtenerConsumosMensuales($userId, ){
+            $sql = "SELECT c.id, cm.periodo, c.consumo, cm.costo FROM consumoMensual cm JOIN consumo c ON cm.id_consumo = c.id WHERE c.user_id = ? ORDER BY cm.periodo";
             $stmt = $this->conexion->prepare($sql);
              
             if($stmt === false){
@@ -50,7 +50,7 @@
             }
             
 
-            $stmt->bind_param("ii",$userId,$limit);
+            $stmt->bind_param("i",$userId);
             $stmt->execute();
 
             if(!$stmt->execute()){
@@ -62,7 +62,25 @@
 
             return ['error' => false, 'resultados' => $resultado];
         }
-
+        public function EliminarConsumoMensual($userId,$consumoId){
+            try {
+                $sql = "DELETE FROM consumo WHERE user_id = ? AND id = ?"; // Cambia el nombre si es necesario
+                $stmt = $this->conexion->prepare($sql);
+                
+                if (!$stmt) {
+                    echo "Error en la preparación de la consulta: "; // Muestra el error en la consulta
+                    return false;
+                }
+        
+                $stmt->bind_param('ii', $userId, $consumoId);
+                $stmt->execute();
+        
+                return $stmt->affected_rows > 0; // Retorna true si se eliminó una fila
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage(); // Muestra el mensaje de error
+                return false; // Retorna false en caso de error
+            }
+        }
         
 
         public function actualizarConsumoAnual($userId,$año){
@@ -113,11 +131,11 @@
             return ['error'=>false, 'resultados'=>$resultados];
         }
 
-        public function __destruct(){
-            if($this->conexion){
-                $this->conexion->close();
-            }
-        }
+        // public function __destruct(){
+        //     if($this->conexion && !$this->conexion->connect_error){
+        //         $this->conexion->close();
+        //     }
+        // }
     }
     
     class AnalizadorConsumo{
@@ -131,7 +149,7 @@
 
         public function AnalizarConsumo($userId){
             $resultados = [];
-            $consumos = $this->db->obtenerConsumosMensuales($userId,4);
+            $consumos = $this->db->obtenerConsumosMensuales($userId);
             if($consumos['error']){
                 return ['error'=> true, 'resultados'=> $resultados];
             }
@@ -170,7 +188,7 @@
             $totalCosto = 0;
             $resultado = [];
 
-            $consumos = $this->db->obtenerConsumosMensuales($userId,4);
+            $consumos = $this->db->obtenerConsumosMensuales($userId);
 
             if($consumos['error']){
                 return ['error'=> true, 'resultados'=> $resultado];

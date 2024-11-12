@@ -28,7 +28,7 @@
         $analizador = new AnalizadorConsumo($factory,$operacionesSQL);
         $empresas = new Empresas($conn);
 
-        $resultados = $operacionesSQL->obtenerConsumosMensuales($userId,-6);
+        $resultados = $operacionesSQL->obtenerConsumosMensuales($userId);
         $analisis = $analizador->analizarConsumo($userId);
         $promedios = $analizador->CalcularPromedio($userId);
         $selecciones = $empresas->ObtenerSelecciones($userId);

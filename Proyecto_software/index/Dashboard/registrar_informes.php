@@ -58,9 +58,24 @@
              }
          }
     }
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['accion'] === 'eliminar') {
+        $operacionesSQL = new operacionesSQL($conn);
+        $consumo_id = filter_input(INPUT_POST, 'consumo_id', FILTER_VALIDATE_INT);
+
+        if ($consumo_id !== false) {
+            $eliminar_resultado = $operacionesSQL->EliminarConsumoMensual($userId,$consumo_id);
+            if ($eliminar_resultado) {
+                $mensaje = "Consumo eliminado correctamente";
+                $tipo_mensaje = "success";
+            } else {
+                $mensaje = "Error al eliminar el consumo";
+                $tipo_mensaje = "error";
+            }
+        }
+    }
 
     $consumos = new operacionesSQL($conn);
-    $resultados = $consumos->obtenerConsumosMensuales($userId,10);
+    $resultados = $consumos->obtenerConsumosMensuales($userId);
  ?>
 </head>
 
@@ -209,11 +224,14 @@
                                               <td><?php echo $resultado['periodo'] ?></td>
                                               <td>$<?php echo $resultado['costo'] ?></td>
                                               <td>
-                                                  <form action="eliminar.php">
+                                                   
                                                     <button class="edit-btn"><i class='bx bx-edit-alt'></i></button>
-                                                    <input type="hidden" name="consumo_id" value="<?php echo $resultado['id']?> ">
-                                                    <button class="delete-btn" type="submit" on-click="return confirm('¿Estas seguro de eliminar este registro ?')"><i class='bx bx-trash'></i></button>
-                                                </form>
+                                                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="display:inline;">
+                                                        <input type="hidden" name="accion" value="eliminar">
+                                                        <input type="hidden" name="consumo_id" value="<?php echo $resultado['id']; ?>">
+                                                        <button type="submit" class="delete-btn" onclick="return confirm('¿Estás seguro de eliminar este registro?')"><i class='bx bx-trash'></i></button>
+                                                    </form>
+                                                
                                               </td>
                                           </tr>
                                           <?php
